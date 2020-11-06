@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  generator:
+    build: ./generator
+    environment:
+      PYTHONUNBUFFERED: 1
+      KAFKA_BROKER_URL: broker:9092
+      TRANSACTIONS_TOPIC: queueing.transactions
+      TRANSACTIONS_PER_SECOND: 30
+    volumes:
+      - '.:/app' 
+      # devices:
+      # - '/dev/video0:/dev/video0'
+  reciever:
+    build: ./reciever
+    environment:
+      PYTHONUNBUFFERED: 1
+      KAFKA_BROKER_URL: broker:9092
+      TRANSACTIONS_TOPIC: queueing.transactions
+    volumes:
+      - '.:/app'
+
+networks:
+  default:
+    external:
+      name: kafka-network

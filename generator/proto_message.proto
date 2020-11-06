@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tutorial;
+
+message image{
+  string key = 1;
+  bytes img_b = 2;
+  bytes img_g = 3;
+  bytes img_r = 4;
+  bytes image = 5;
+}
+
