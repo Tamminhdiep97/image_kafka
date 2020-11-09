@@ -27,6 +27,13 @@ consumer.subscribe([TRANSACTIONS_TOPIC])
 #                          value_deserializer=lambda value: json.loads(value),)
 
 
+def base64_string_to_img(base64_string):
+    imgdata = base64.b64decode(base64_string)
+    pil_img = Image.open(io.BytesIO(imgdata))
+    cv2_img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_BGR2RGB)
+    return cv2_img
+
+
 if __name__ == "__main__":
     count_message = 0
     time_thresh = float(1.0)
@@ -34,7 +41,6 @@ if __name__ == "__main__":
     # for msg in consumer:
     #    print(sys.getsizeof(msg))
     while True:
-        time_start = float(time.time())
         msg = consumer.poll(1)
         if msg is None:
             continue
@@ -47,49 +53,8 @@ if __name__ == "__main__":
             print('Message receive per second:', str(count_message/count_time))
             count_message = 0
             count_time = 0
-        # print(msg.value())
-        # print('receive')
-        # msg_value = msg.value().decode('utf-8')
-#        # print(msg_value)
-        # msg = text_format.Merge(text=msg_value, message=image)
-#        b_decode = (msg.img_b).decode('utf-8')
-#        # print(type(b_decode))
-#        b_np = np.frombuffer((msg.img_b), np.uint8)
-#        g_np = np.frombuffer((msg.img_g), np.uint8)
-#        r_np = np.frombuffer((msg.img_r), np.uint8)
-#        print(r_np.shape)
-#        # f = open("arr.txt", "w")
-#        # f.write(r_np)
-#        # f.close()
-#        # f_ = open('str.txt', 'w')
-#        # f_.write((msg.img_g).decode('utf-8'))
-#        # f_.close()
-#        # print('File wrote')
-#        img_bgr = cv2.merge((b_np, g_np, r_np))
-#        height, width, channels = img_bgr.shape
-#        # print(img_bgr.shape)
-#        # print(len((msg.img_g).decode('utf-8')))
-#        # print(g_np.shape)
-#        # print(height, width, channels)
-#        image_np = np.fromstring((msg.image).decode('utf-8'), np.uint8)
-#        # print(image_np.shape)
-#        # image_string = (msg.image).decode('utf-8')
-#        # print(image_string)
-#        # image_numpy = np.fromstring(image_string, np.uint8)
-#
-#        # print(b_decode)
-#        # b_arr = np.fromstring(b_decode)
-#        # print(b_arr)
-#        # print(type((msg.img_data).decode('utf-8')))
-#        # msg_value = eval(msg_value)
-#        # print(type(msg_value))
-#        # print(type(msg.value))
-#        # print(msg)
-#        # value_decode_byte = msg.value().decode('utf-8')
-#        # value_decode_json = json.loads(value_decode_byte)
-#        # value_img = value_decode_json['face']
-#        # img = base64_string_to_img(value_img)
-#        # print(img[:2])
-#        # print('Received message')
-
+        msg_value = msg.value().decode('utf-8')
+        data_string = json.loads(msg_value)
+        img_data = data_string['face']
+        img = base64_string_to_img(img_data)
     consumer.close()

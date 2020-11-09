@@ -44,72 +44,17 @@ def delivery_report(err, msg):
 
 
 if __name__ == '__main__':
-    # producer = KafkaProducer(
-    #     bootstrap_servers=KAFKA_BROKER_URL,
-    #     # Encode all values as JSON
-    #     # value_serializer=lambda value: json.dumps(value).encode(),
-    # )
     image_cv = cv2.imread('fullhd.jpg')
-    numpy_image = np.array(image_cv)
-    # print(numpy_image)
-    # print(str(numpy_image).encode('utf-8'))
-    str_image = numpy_image.tostring()
-    # print(type(image_cv))
-    # print('size of image', sys.getsizeof(image_cv))
-    # print('size base64', sys.getsizeof(image_b64))
-    image_encode = (str(image_cv)).encode('utf-8')
-    # print('size of encode image',
-    #       sys.getsizeof(image_encode))
-    count_msg = 0
     time_thresh = float(1.0)
     count_time = float(0)
     while True:
         key_time = time.time()
         base64_string = img_to_base64_string(image_cv)
-        # print('size bas64 string:', sys.getsizeof(json.dumps(base64_string).encode()))
-        # print('type bas64 string:', type(json.dumps(base64_string).encode()))
-        # image_cv = cv2.resize(image_cv, (960, 540))
-        # base64_string = img_to_base64_string(image_cv)
-        # print(image_cv.shape)
-        # print(numpy_image.shape)
-        # print('size:', sys.getsizeof(str_image))
-        # print('size:', sys.getsizeof(str_image.encode('utf-8')))
-        # print(sys.getsizeof(str(numpy_image).encode('utf-8')))
-        # b, g, r = cv2.split(image_cv)
-        # b_np = np.array(b)
-        # g_np = np.array(g)
-        # r_np = np.array(r)
-        # print(type(b_np.tostring()))
-        # print(r_np.shape)
-        # b = b[0]
-        # g = g[0]
-        # r = r[0]
-        # print(b_np.shape)
-        # print(len(b_np))
-        # print(image_cv.shape)
-        # img_tobytes = bytes(image_cv)
         # print(sys.getsizeof(b_np.tobytes()))
-        img_json = json.dumps(base64_string).encode()
-        msg_obj = image(
-            key=str(key_time),
-            img_b=str(1).encode('utf-8'),
-            img_g=str(1).encode('utf-8'),
-            img_r=str(1).encode('utf-8'),
-            image=img_json
-        )
+        img_json = json.dumps(base64_string)
         # print(sys.getsizeof(bytes(msg_obj)))
         msg_value = text_format.MessageToString(msg_obj, as_utf8=True,
                                                 double_format='.17g')
-        # msg_value = str(msg_obj).encode('utf-8')
-        # msg_astring = msg_obj.SerializeToString()
-        # msg_value = zlib.compress(msg_astring, -1)
-        # print(msg_obj)
-        # print('size of message',
-        #      sys.getsizeof(msg_obj))
-        # print('size of encode message',
-        #      sys.getsizeof(msg_value))
-        # msg_obj = 12
-        # print(msg_obj)
 #        print(os.getcwd())
         # img = cv2.imread('fullhd.jpg')
         # data = img_to_base64_string(img)
@@ -117,7 +62,7 @@ if __name__ == '__main__':
         # producer.poll(0)
         # producer.send(TRANSACTIONS_TOPIC, value=msg_value)
         producer.produce(TRANSACTIONS_TOPIC,
-                         value=msg_value,
+                         value=img_json,
                          callback=delivery_report)
         # print(type((str(msg_obj)).encode('utf-8')))
         # producer.produce(TRANSACTIONS_TOPIC,
