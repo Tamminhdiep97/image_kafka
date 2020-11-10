@@ -6,7 +6,7 @@ Encode image with full Hd resolution by following these steps:
 	2.	Decode into string type
 	3.	json.dumps
 
-Send message via Confluent Kafka. Consumer will do decode process by reversing the encoding process.
+Send message via Confluent Kafka. Consumer will do decoding process by reversing the encoding process.
 
 ### Docker file
 
