@@ -22,10 +22,6 @@ consumer = Consumer({'bootstrap.servers': KAFKA_BROKER_URL,
 
 consumer.subscribe([TRANSACTIONS_TOPIC])
 
-# consumer = KafkaConsumer(TRANSACTIONS_TOPIC,
-#                          bootstrap_servers=KAFKA_BROKER_URL,
-#                          value_deserializer=lambda value: json.loads(value),)
-
 
 def base64_string_to_img(base64_string):
     imgdata = base64.b64decode(base64_string)
@@ -38,8 +34,7 @@ if __name__ == "__main__":
     count_message = 0
     time_thresh = float(1.0)
     count_time = float(0)
-    # for msg in consumer:
-    #    print(sys.getsizeof(msg))
+    time_start = 0
     while True:
         msg = consumer.poll(1)
         if msg is None:
@@ -57,4 +52,5 @@ if __name__ == "__main__":
         data_string = json.loads(msg_value)
         img_data = data_string['face']
         img = base64_string_to_img(img_data)
+        print('Image size:', img.shape)
     consumer.close()

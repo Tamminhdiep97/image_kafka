@@ -24,19 +24,18 @@ SLEEP_TIME = 1 / TRANSACTIONS_PER_SECOND
 producer = Producer({'bootstrap.servers': KAFKA_BROKER_URL,
                      'group.id': 'mygroup',
                      'auto.offset.reset': 'earliest'})
-
-
 # producer = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL)
+
 
 def img_to_base64_string(img) -> dict:
     '''create face to send topic'''
     is_success, im_buf_arr = cv2.imencode(".jpg", img)
     img_base64 = base64.b64encode(im_buf_arr)
     base64_string = img_base64.decode('utf-8')
-
     return {
         'face': base64_string,
     }
+
 
 def delivery_report(err, msg):
     if err is not None:
@@ -47,29 +46,17 @@ if __name__ == '__main__':
     image_cv = cv2.imread('fullhd.jpg')
     time_thresh = float(1.0)
     count_time = float(0)
+    count_msg = 0
+    count_time = 0
     while True:
         key_time = time.time()
         base64_string = img_to_base64_string(image_cv)
         # print(sys.getsizeof(b_np.tobytes()))
         img_json = json.dumps(base64_string)
-        # print(sys.getsizeof(bytes(msg_obj)))
-        msg_value = text_format.MessageToString(msg_obj, as_utf8=True,
-                                                double_format='.17g')
-#        print(os.getcwd())
-        # img = cv2.imread('fullhd.jpg')
-        # data = img_to_base64_string(img)
-        # json_data = json.dumps(data)
-        # producer.poll(0)
-        # producer.send(TRANSACTIONS_TOPIC, value=msg_value)
+        # print(sys.getsizeof(bytes(img_json)))
         producer.produce(TRANSACTIONS_TOPIC,
                          value=img_json,
                          callback=delivery_report)
-        # print(type((str(msg_obj)).encode('utf-8')))
-        # producer.produce(TRANSACTIONS_TOPIC,
-        #                  value=msg_value,
-        #                  callback=delivery_report)
-        # # transaction = 'Text Message'
-        # print(transaction)  # DEBUG
         # sleep(SLEEP_TIME)
         count_msg += 1
         count_time += float(time.time() - key_time)
