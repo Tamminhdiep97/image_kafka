@@ -12,7 +12,7 @@ Send message via Confluent Kafka. Consumer will do decoding process by reversing
 
 cd into folder:
 
-	1.	docker-compose -f docker.compose.kafka.yml up --build
+	1. docker-compose -f docker.compose.kafka.yml up --build
 	2. open a new terminal and typing: docker-compose up --build
 
 That's it. Have fun.
