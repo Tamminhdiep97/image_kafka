@@ -15,4 +15,5 @@ cd into folder:
 	1. docker-compose -f docker.compose.kafka.yml up --build
 	2. open a new terminal and typing: docker-compose up --build
 
+Inspited by my Mentor: https://github.com/huutrinh68 and https://florimond.dev/blog/articles/2018/09/building-a-streaming-fraud-detection-system-with-kafka-and-python/ 
 That's it. Have fun.
